@@ -12,7 +12,7 @@ const MikroOrmConfig: Options = {
   user: configService.get('POSTGRES_USERNAME'),
   password: configService.get('POSTGRES_PASSWORD'),
   dbName: configService.get('POSTGRES_DB'),
-  debug: true,
+  debug: configService.get('NODE_ENV') === 'development',
 };
 
 export default MikroOrmConfig;
