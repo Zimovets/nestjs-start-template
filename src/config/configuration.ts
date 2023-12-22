@@ -13,7 +13,7 @@ export interface IConfig {
 }
 
 export const validationSchema = Joi.object({
-  NODE_ENV: Joi.string().valid('development', 'production').required(),
+  NODE_ENV: Joi.string().valid('development', 'production', 'test').required(),
   PORT: Joi.number().required(),
   POSTGRES_USERNAME: Joi.string().required(),
   POSTGRES_PASSWORD: Joi.string().required(),
