@@ -53,6 +53,6 @@ $ npm run migration:create
 $ npm run migration:up
 
 # rollback migration
-$ npm run migration:up
+$ npm run migration:down
 
 ```
