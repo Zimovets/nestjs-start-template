@@ -1,9 +1,10 @@
 import { Module } from '@nestjs/common';
 import { UserModule } from './user/user.module';
-import { ConfigModule } from '@nestjs/config';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 import configuration, { validationSchema } from 'src/config/configuration';
 import { MikroOrmModule } from '@mikro-orm/nestjs';
 import { AuthModule } from './auth/auth.module';
+import { JwtModule } from '@nestjs/jwt';
 
 @Module({
   imports: [
@@ -14,6 +15,19 @@ import { AuthModule } from './auth/auth.module';
       load: [configuration],
       validationSchema,
     }),
+    {
+      ...JwtModule.registerAsync({
+        imports: [ConfigModule],
+        inject: [ConfigService],
+        useFactory: (config: ConfigService) => ({
+          secret: config.get('jwt.secret') as string,
+          signOptions: {
+            expiresIn: config.get('jwt.expiresIn') as number,
+          },
+        }),
+      }),
+      global: true,
+    },
     MikroOrmModule.forRoot(),
     UserModule,
     AuthModule,

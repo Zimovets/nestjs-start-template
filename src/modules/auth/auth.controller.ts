@@ -3,6 +3,7 @@ import { DoesUserExist } from './guards/doesUserExist.guard';
 import { UserSignUpDto } from './dto/userSignUp.dto';
 import { UserSignInDto } from './dto/userSignIn.dto ';
 import { AuthService } from './auth.service';
+import { SignResponse } from 'src/response/signUpResponse';
 
 @Controller('auth')
 export class AuthController {
@@ -15,7 +16,7 @@ export class AuthController {
 
   @UseGuards(DoesUserExist)
   @Post('signup')
-  async signUp(@Body() user: UserSignUpDto) {
+  async signUp(@Body() user: UserSignUpDto): Promise<SignResponse> {
     return await this.authService.signUp(user);
   }
 }

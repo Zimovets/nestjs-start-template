@@ -10,6 +10,11 @@ export interface IConfig {
     port: number;
     db: string;
   };
+  jwt: {
+    secret: string;
+    expiresIn: number;
+    refreshExpiresIn: number;
+  };
 }
 
 export const validationSchema = Joi.object({
@@ -20,6 +25,9 @@ export const validationSchema = Joi.object({
   POSTGRES_HOST: Joi.string().required(),
   POSTGRES_PORT: Joi.number().required(),
   POSTGRES_DB: Joi.string().required(),
+  JWT_SECRET: Joi.string().required(),
+  JWT_EXPIRES_IN: Joi.number().required(),
+  JWT_REFRESH_EXPIRES_IN: Joi.number().required(),
 });
 
 export default (): IConfig => ({
@@ -31,5 +39,10 @@ export default (): IConfig => ({
     host: process.env.POSTGRES_HOST,
     port: parseInt(process.env.POSTGRES_PORT),
     db: process.env.POSTGRES_DB,
+  },
+  jwt: {
+    secret: process.env.JWT_SECRET,
+    expiresIn: parseInt(process.env.JWT_EXPIRES_IN),
+    refreshExpiresIn: parseInt(process.env.JWT_REFRESH_EXPIRES_IN),
   },
 });
