@@ -1,3 +1,8 @@
+## Technology stack
+ - nestjs
+ - microORM
+ - postgres
+
 ## Installation
 
 ```bash
@@ -30,11 +35,14 @@ $ npm run test:e2e
 $ npm run test:cov
 ```
 
-## Run Postgres
-```bash
-$  docker run --name postgres -e POSTGRES_PASSWORD=1111 -e POSTGRES_DB=saas_marketing_platform -p 5432:5432 -d postgres
+## Run Postgres in Docker
 
-## MicroORM
+```bash
+
+$  docker run --name postgres -e POSTGRES_PASSWORD=yourPassword -e POSTGRES_DB=yourDBname -p 5432:5432 -d postgres
+
+```
+## Handle migrations
 
 ```bash
 
@@ -46,3 +54,5 @@ $ npm run migration:up
 
 # rollback migration
 $ npm run migration:up
+
+```
