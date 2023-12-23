@@ -3,6 +3,7 @@ import { User } from './src/entities/user.entity';
 import { ConfigService } from '@nestjs/config';
 
 const configService = new ConfigService();
+const env = configService.get('NODE_ENV');
 
 const MikroOrmConfig: Options = {
   entities: [User],
@@ -11,8 +12,8 @@ const MikroOrmConfig: Options = {
   port: configService.get('POSTGRES_PORT'),
   user: configService.get('POSTGRES_USERNAME'),
   password: configService.get('POSTGRES_PASSWORD'),
-  dbName: configService.get('POSTGRES_DB'),
-  debug: configService.get('NODE_ENV') === 'development',
+  dbName: env === 'test' ? 'testdb' : configService.get('POSTGRES_DB'),
+  debug: env === 'development',
 };
 
 export default MikroOrmConfig;
