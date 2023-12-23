@@ -22,3 +22,5 @@ export class AuthController {
 }
 
 // TODO: implement local strategy for signin
+// TODO: delete first test case
+// TODO: tests for signin

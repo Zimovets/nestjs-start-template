@@ -28,7 +28,7 @@ describe('AuthController (e2e)', () => {
       .expect('Hello World from user module');
   });
 
-  it('/auth/signup POST', () => {
+  it('/auth/signup POST, should create user', () => {
     return request(app.getHttpServer())
       .post('/auth/signup')
       .set('Accept', 'application/json')
@@ -43,6 +43,19 @@ describe('AuthController (e2e)', () => {
         const { userId, token, refreshToken } = res.body;
         expect(userId && token && refreshToken).toBeTruthy();
       });
+  });
+
+  it('/auth/signup POST, user already exist', () => {
+    return request(app.getHttpServer())
+      .post('/auth/signup')
+      .set('Accept', 'application/json')
+      .send({
+        firstName: 'test',
+        lastName: 'test',
+        email: 'test@getMaxListeners.com',
+        password: '11111111',
+      })
+      .expect(403);
   });
 
   it('/auth/signup POST, wrong password', () => {

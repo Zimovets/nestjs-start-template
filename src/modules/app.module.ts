@@ -34,7 +34,3 @@ import { JwtModule } from '@nestjs/jwt';
   ],
 })
 export class AppModule {}
-
-// TODO: implement validation
-// TODO:  auth with email password
-// TODO: end-to-end test to check user dto validation and db validation
