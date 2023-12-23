@@ -14,7 +14,7 @@ export class UserService {
 
   async createUser(user: UserSignUpDto): Promise<User> {
     const newUser = this.em.create(User, user);
-    await this.em.persistAndFlush(user);
+    await this.em.persistAndFlush(newUser);
 
     return newUser;
   }
