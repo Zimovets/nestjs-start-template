@@ -9,7 +9,6 @@ import { promisify } from 'util';
 import { User } from 'src/entities/user.entity';
 import { EntityManager } from '@mikro-orm/postgresql';
 import { UserSignUpDto } from './dto/userSignUp.dto';
-import { UserSignInDto } from './dto/userSignIn.dto ';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import { SignResponse } from 'src/response/signUpResponse';
@@ -38,21 +37,8 @@ export class AuthService {
     return await this.generateResWIthTokenPair(newUser);
   }
 
-  async signIn(user: UserSignInDto): Promise<SignResponse> {
-    const dbUser = await this.em.findOne(User, { email: user.email });
-    if (!dbUser) {
-      throw new NotFoundException('User not found');
-    }
-
-    const [salt, storedHash] = dbUser.password.split('.');
-
-    const hash = (await scrypt(user.password, salt, 32)) as Buffer;
-
-    if (storedHash !== hash.toString('hex')) {
-      throw new BadRequestException('Wrong password');
-    }
-
-    return await this.generateResWIthTokenPair(dbUser);
+  async signIn(user: User): Promise<SignResponse> {
+    return await this.generateResWIthTokenPair(user);
   }
 
   async generateResWIthTokenPair(user: User): Promise<SignResponse> {
@@ -73,5 +59,22 @@ export class AuthService {
       token,
       refreshToken,
     };
+  }
+
+  async validateUser(email: string, password: string): Promise<User> {
+    const dbUser = await this.em.findOne(User, { email });
+    if (!dbUser) {
+      throw new NotFoundException('User not found');
+    }
+
+    const [salt, storedHash] = dbUser.password.split('.');
+
+    const hash = (await scrypt(password, salt, 32)) as Buffer;
+
+    if (storedHash !== hash.toString('hex')) {
+      throw new BadRequestException('Wrong password');
+    }
+
+    return dbUser;
   }
 }
