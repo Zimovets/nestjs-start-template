@@ -30,8 +30,7 @@ export class AuthController {
   }
 }
 
-// TODO: implement local strategy for signin
 // TODO: delete first test case
-// TODO: tests for signin
 // TODO: implement refresh token and test it
 // TODO: investigate maybe remove jwt module registration from app to auth
+// TODO: investigate microORM source code
