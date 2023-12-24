@@ -1,8 +1,4 @@
-import {
-  Injectable,
-  BadRequestException,
-  NotFoundException,
-} from '@nestjs/common';
+import { Injectable, BadRequestException } from '@nestjs/common';
 import { UserService } from '../user/user.service';
 import { randomBytes, scrypt as _scrypt } from 'crypto';
 import { promisify } from 'util';
@@ -64,7 +60,7 @@ export class AuthService {
   async validateUser(email: string, password: string): Promise<User> {
     const dbUser = await this.em.findOne(User, { email });
     if (!dbUser) {
-      throw new NotFoundException('User not found');
+      throw new BadRequestException('User with this email not found');
     }
 
     const [salt, storedHash] = dbUser.password.split('.');
