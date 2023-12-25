@@ -3,6 +3,7 @@ import { INestApplication, ValidationPipe } from '@nestjs/common';
 import * as request from 'supertest';
 import { AppModule } from '../../src/modules/app.module';
 import { MikroORM } from '@mikro-orm/core';
+import { JwtService } from '@nestjs/jwt';
 
 describe('AuthController (e2e)', () => {
   let app: INestApplication;
@@ -11,10 +12,15 @@ describe('AuthController (e2e)', () => {
   let userRefreshToken;
   let id;
 
+  let jwtServiceMock: jest.Mocked<JwtService>;
+
   beforeAll(async () => {
     const testModule: TestingModule = await Test.createTestingModule({
       imports: [AppModule],
-    }).compile();
+    })
+      .overrideProvider(JwtService)
+      .useValue(jwtServiceMock)
+      .compile();
 
     orm = testModule.get<MikroORM>(MikroORM);
     await orm.schema.createSchema();
@@ -22,6 +28,8 @@ describe('AuthController (e2e)', () => {
     app = testModule.createNestApplication();
     app.useGlobalPipes(new ValidationPipe());
     await app.init();
+
+    jwtServiceMock = testModule.get(JwtService);
   });
 
   it('/ (GET)', () => {
@@ -181,6 +189,57 @@ describe('AuthController (e2e)', () => {
         const { userId, token, refreshToken } = res.body;
         expect(userId && token && refreshToken).toBeTruthy();
         expect(userId === id).toBeTruthy();
+      });
+  });
+
+  it('/auth/refresh POST, there is empty string insteed token in body', () => {
+    return request(app.getHttpServer())
+      .post('/auth/refresh')
+      .set('Accept', 'application/json')
+      .send({
+        token: '',
+      })
+      .expect(400)
+      .then((res) => {
+        console.log(res.body);
+      });
+  });
+
+  it('/auth/refresh POST, there is no token in body', () => {
+    return request(app.getHttpServer())
+      .post('/auth/refresh')
+      .set('Accept', 'application/json')
+      .expect(400)
+      .then((res) => {
+        console.log(res.body);
+      });
+  });
+
+  it('/auth/refresh POST, refresh token is corrupted', () => {
+    return request(app.getHttpServer())
+      .post('/auth/refresh')
+      .set('Accept', 'application/json')
+      .send({
+        token: 'sdfionfdrugbvxgndidg',
+      })
+      .expect(403)
+      .then((res) => {
+        console.log(res.body);
+      });
+  });
+
+  it('/auth/refresh POST, cant find user', () => {
+    jwtServiceMock.decode = jest.fn().mockReturnValueOnce({ sub: id + 10 });
+
+    return request(app.getHttpServer())
+      .post('/auth/refresh')
+      .set('Accept', 'application/json')
+      .send({
+        token: userRefreshToken,
+      })
+      .expect(404)
+      .then((res) => {
+        console.log(res.body);
       });
   });
 
