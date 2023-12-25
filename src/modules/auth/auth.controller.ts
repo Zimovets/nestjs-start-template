@@ -5,7 +5,6 @@ import {
   UseGuards,
   Request,
   HttpCode,
-  BadRequestException,
 } from '@nestjs/common';
 import { DoesUserExist } from './guards/doesUserExist.guard';
 import { UserSignUpDto } from './dto/userSignUp.dto';
@@ -34,13 +33,7 @@ export class AuthController {
   @HttpCode(200)
   @Post('refresh')
   async refreshToken(@Body() refreshToken: RefreshTokenDto) {
-    const token = refreshToken.token;
-
-    if (!token) {
-      throw new BadRequestException('There is no refresh token');
-    }
-
-    return await this.authService.refresh(token);
+    return await this.authService.refresh(refreshToken.token);
   }
 }
 
@@ -52,3 +45,5 @@ export class AuthController {
 // TODO: implement signin with google
 // TODO: replace strings in Exceptions
 // TODO: implement jwt stategy
+// TODO: inestigate why test dont work with test:watch
+// TODO: add email to refresh token payload
