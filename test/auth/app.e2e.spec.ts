@@ -8,6 +8,9 @@ describe('AuthController (e2e)', () => {
   let app: INestApplication;
   let orm: MikroORM;
 
+  let userRefreshToken;
+  let id;
+
   beforeAll(async () => {
     const testModule: TestingModule = await Test.createTestingModule({
       imports: [AppModule],
@@ -160,6 +163,24 @@ describe('AuthController (e2e)', () => {
       .then((res) => {
         const { userId, token, refreshToken } = res.body;
         expect(userId && token && refreshToken).toBeTruthy();
+
+        userRefreshToken = refreshToken;
+        id = userId;
+      });
+  });
+
+  it('/auth/refresh POST, should refresh token', () => {
+    return request(app.getHttpServer())
+      .post('/auth/refresh')
+      .set('Accept', 'application/json')
+      .send({
+        token: userRefreshToken,
+      })
+      .expect(200)
+      .then((res) => {
+        const { userId, token, refreshToken } = res.body;
+        expect(userId && token && refreshToken).toBeTruthy();
+        expect(userId === id).toBeTruthy();
       });
   });
 

@@ -1,4 +1,9 @@
-import { Injectable, BadRequestException } from '@nestjs/common';
+import {
+  Injectable,
+  BadRequestException,
+  ForbiddenException,
+  NotFoundException,
+} from '@nestjs/common';
 import { UserService } from '../user/user.service';
 import { randomBytes, scrypt as _scrypt } from 'crypto';
 import { promisify } from 'util';
@@ -72,5 +77,21 @@ export class AuthService {
     }
 
     return dbUser;
+  }
+
+  async refresh(refreshToken: string): Promise<SignResponse> {
+    const decodedToken = this.jwtService.decode(refreshToken);
+
+    if (!decodedToken) {
+      throw new ForbiddenException();
+    }
+
+    const user = await this.em.findOne(User, { id: decodedToken.sub });
+
+    if (!user) {
+      throw new NotFoundException(`There is no user with this id`);
+    }
+
+    return await this.generateResWIthTokenPair(user);
   }
 }
