@@ -94,4 +94,24 @@ export class AuthService {
 
     return await this.generateResWIthTokenPair(user);
   }
+
+  async getOrCreateGoogleUser(profile: any): Promise<SignResponse> {
+    const {
+      emails,
+      name: { givenName, familyName },
+    } = profile;
+    const email = emails[0].value;
+
+    let user = await this.em.findOne(User, { email });
+
+    if (!user) {
+      user = await this.userService.createUser({
+        firstName: givenName,
+        lastName: familyName,
+        email,
+      });
+    }
+
+    return await this.generateResWIthTokenPair(user);
+  }
 }

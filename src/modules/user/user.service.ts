@@ -2,7 +2,6 @@
 import { EntityManager } from '@mikro-orm/postgresql';
 import { Injectable } from '@nestjs/common';
 import { User } from 'src/entities/user.entity';
-import { UserSignUpDto } from '../auth/dto/userSignUp.dto';
 
 @Injectable()
 export class UserService {
@@ -12,7 +11,7 @@ export class UserService {
     return 'Hello World from user module';
   }
 
-  async createUser(user: UserSignUpDto): Promise<User> {
+  async createUser(user): Promise<User> {
     const newUser = this.em.create(User, user);
     await this.em.persistAndFlush(newUser);
 

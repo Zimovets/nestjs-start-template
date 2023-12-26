@@ -4,7 +4,9 @@ import {
   Post,
   UseGuards,
   Request,
+  Response,
   HttpCode,
+  Get,
 } from '@nestjs/common';
 import { DoesUserExist } from './guards/doesUserExist.guard';
 import { UserSignUpDto } from './dto/userSignUp.dto';
@@ -35,6 +37,16 @@ export class AuthController {
   async refreshToken(@Body() refreshToken: RefreshTokenDto) {
     return await this.authService.refresh(refreshToken.token);
   }
+
+  @Get('google')
+  @UseGuards(AuthGuard('google'))
+  async googleLogin(): Promise<void> {}
+
+  @Get('google/callback')
+  @UseGuards(AuthGuard('google'))
+  async googleLoginCallback(@Request() req, @Response() res): Promise<void> {
+    res.send(req.user);
+  }
 }
 
 // TODO: delete first test case
@@ -46,3 +58,4 @@ export class AuthController {
 // TODO: implement jwt stategy
 // TODO: inestigate why test dont work with test:watch
 // TODO: add not deleted condition to findOneUser
+// TODO: figureout how to logout from google

@@ -15,6 +15,13 @@ export interface IConfig {
     expiresIn: number;
     refreshExpiresIn: number;
   };
+  auth: {
+    google: {
+      clientId: string;
+      secret: string;
+      callbackUrl: string;
+    };
+  };
 }
 
 export const validationSchema = Joi.object({
@@ -28,6 +35,9 @@ export const validationSchema = Joi.object({
   JWT_SECRET: Joi.string().required(),
   JWT_EXPIRES_IN: Joi.number().required(),
   JWT_REFRESH_EXPIRES_IN: Joi.number().required(),
+  GOOGLE_CLIENT_ID: Joi.string().required(),
+  GOOGLE_CLIENT_SECRET: Joi.string().required(),
+  GOOGLE_CALLBACK_URL: Joi.string().required(),
 });
 
 export default (): IConfig => ({
@@ -44,5 +54,12 @@ export default (): IConfig => ({
     secret: process.env.JWT_SECRET,
     expiresIn: parseInt(process.env.JWT_EXPIRES_IN),
     refreshExpiresIn: parseInt(process.env.JWT_REFRESH_EXPIRES_IN),
+  },
+  auth: {
+    google: {
+      clientId: process.env.GOOGLE_CLIENT_ID,
+      secret: process.env.GOOGLE_CLIENT_SECRET,
+      callbackUrl: process.env.GOOGLE_CALLBACK_URL,
+    },
   },
 });
