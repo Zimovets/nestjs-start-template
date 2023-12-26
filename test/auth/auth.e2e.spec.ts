@@ -32,13 +32,6 @@ describe('AuthController (e2e)', () => {
     jwtServiceMock = testModule.get(JwtService);
   });
 
-  it('/ (GET)', () => {
-    return request(app.getHttpServer())
-      .get('/user')
-      .expect(200)
-      .expect('Hello World from user module');
-  });
-
   it('/auth/signup POST, should create user', () => {
     return request(app.getHttpServer())
       .post('/auth/signup')

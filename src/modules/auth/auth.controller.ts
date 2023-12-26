@@ -49,12 +49,9 @@ export class AuthController {
   }
 }
 
-// TODO: delete first test case
 // TODO: investigate maybe remove jwt module registration from app to auth
 // TODO: investigate microORM source code
 // TODO: add swagger
 // TODO: replace strings in Exceptions
-// TODO: implement jwt stategy
 // TODO: inestigate why test dont work with test:watch
-// TODO: add not deleted condition to findOneUser
 // TODO: figureout how to logout from google

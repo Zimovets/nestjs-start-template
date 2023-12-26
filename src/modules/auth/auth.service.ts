@@ -63,7 +63,7 @@ export class AuthService {
   }
 
   async validateUser(email: string, password: string): Promise<User> {
-    const dbUser = await this.em.findOne(User, { email });
+    const dbUser = await this.em.findOne(User, { email, deletedAt: null });
     if (!dbUser) {
       throw new BadRequestException('User with this email not found');
     }
@@ -86,7 +86,10 @@ export class AuthService {
       throw new ForbiddenException();
     }
 
-    const user = await this.em.findOne(User, { id: decodedToken.sub });
+    const user = await this.em.findOne(User, {
+      id: decodedToken.sub,
+      deletedAt: null,
+    });
 
     if (!user) {
       throw new NotFoundException(`There is no user with this id`);
@@ -102,7 +105,7 @@ export class AuthService {
     } = profile;
     const email = emails[0].value;
 
-    let user = await this.em.findOne(User, { email });
+    let user = await this.em.findOne(User, { email, deletedAt: null });
 
     if (!user) {
       user = await this.userService.createUser({
