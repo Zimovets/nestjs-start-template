@@ -28,7 +28,7 @@ describe('AuthController (e2e)', () => {
       .send({
         firstName: 'test',
         lastName: 'test',
-        email: 'test@gmail.com',
+        email: 'test2@gmail.com',
         password: '11111111',
       });
 
