@@ -19,11 +19,15 @@ export class JwtStrategy extends PassportStrategy(Strategy, 'jwt') {
   }
 
   async validate(payload: any) {
-    const dbUser = await this.em.findOne(User, {
-      id: payload.sub,
-      email: payload.email,
-      deletedAt: null,
-    });
+    const dbUser = await this.em.findOne(
+      User,
+      {
+        id: payload.sub,
+        email: payload.email,
+        deletedAt: null,
+      },
+      { fields: ['id', 'email', 'firstName', 'lastName'] },
+    );
 
     if (!dbUser) {
       return null;

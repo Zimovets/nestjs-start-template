@@ -1,15 +1,15 @@
 // user.controller.ts
-import { Controller, Get, UseGuards } from '@nestjs/common';
-import { UserService } from './user.service';
+import { Controller, Get, Request, UseGuards } from '@nestjs/common';
 import { JwtAuthGuard } from '../auth/guards/jwt.guard';
+import { EntityManager } from '@mikro-orm/postgresql';
 
 @Controller('user')
 export class UserController {
-  constructor(private readonly userService: UserService) {}
+  constructor(private readonly em: EntityManager) {}
 
   @Get()
   @UseGuards(JwtAuthGuard)
-  async findAll() {
-    return await this.userService.sayHello();
+  async getUser(@Request() req) {
+    return req.user;
   }
 }
