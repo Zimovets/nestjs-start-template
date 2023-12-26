@@ -76,7 +76,7 @@
           "unsigned": false,
           "autoincrement": false,
           "primary": false,
-          "nullable": false,
+          "nullable": true,
           "mappedType": "string"
         }
       },
@@ -102,14 +102,7 @@
           "unique": true
         }
       ],
-      "checks": [
-        {
-          "name": "user_password_check",
-          "expression": "LENGTH(password) >= 8",
-          "definition": "check ((LENGTH(password) >= 8))",
-          "columnName": "password"
-        }
-      ],
+      "checks": [],
       "foreignKeys": {}
     }
   ]
