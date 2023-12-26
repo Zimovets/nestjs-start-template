@@ -53,7 +53,6 @@ export class AuthController {
 // TODO: investigate maybe remove jwt module registration from app to auth
 // TODO: investigate microORM source code
 // TODO: add swagger
-// TODO: implement signin with google
 // TODO: replace strings in Exceptions
 // TODO: implement jwt stategy
 // TODO: inestigate why test dont work with test:watch
